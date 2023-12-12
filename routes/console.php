@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Foundation\Inspiring;
+use Symfony\Component\Routing\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\ChirpController;
 
 /*
 |--------------------------------------------------------------------------
