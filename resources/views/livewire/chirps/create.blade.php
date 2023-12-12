@@ -1,26 +1,23 @@
 <?php
 
+use Livewire\Attributes\Rule;
 use Livewire\Volt\Component;
 
 new class extends Component 
 {   
-    protected $rules = [
-        'message' => 'required|string|max:255',
-    ];
-    
+   
+    #[Rule('required|string|max:255')]
     public string $message = '';
 
     public function store(): void
     {
-        $this->validate();
+        $validated = $this->validate();
 
-        auth()->user()->chirps()->create([
-            'message' => $this->message,
-        ]);
+        auth()->user()->chirps()->create($validated);
 
         $this->message = '';
 
-        $this->emit('chirp.created');
+        $this->dispatch('chirp-created');
     }
 }; ?>
 
