@@ -32,10 +32,20 @@ new class extends Component
         $this->getChirps();
     }
 
-    #[On('chirp-updated', 'chirp-editing-canceled')]
+    #[On('chirp-editing-canceled')]
+    #[On('chirp-updated')]
     public function disableEditing(): void
     {
         $this->editing = null;
+
+        $this->getChirps();
+    }
+
+    public function delete(Chirp $chirp)
+    {
+        $this->authorize('delete', $chirp);
+
+        $chirp->delete();
 
         $this->getChirps();
     }
@@ -53,9 +63,9 @@ new class extends Component
                     <div>
                         <span class="text-gray-800">{{ $chirp->user->name }}</span>
                         <small class="ml-2 text-sm text-gray-600">{{ $chirp->created_at->format('j M Y, g:i a') }}</small>
-                        @unless ($chirp->created_at->eq($chirp->updated_at))
-                            <small class="text-sm text-gray-600"> &middot; {{ __('edited') }}</small>
-                        @endunless
+                            @unless ($chirp->created_at->eq($chirp->updated_at))
+                                <small class="text-sm text-gray-600"> &middot; {{ __('edited') }}</small>
+                            @endunless
                     </div>
                     @if ($chirp->user->is(auth()->user()))
                         <x-dropdown>
@@ -70,6 +80,9 @@ new class extends Component
                                 <x-dropdown-link wire:click="edit({{ $chirp->id }})">
                                     {{ __('Edit') }}
                                 </x-dropdown-link>
+                                <x-dropdown-link wire:click="delete({{ $chirp->id }})" wire:confirm="Are you sure to delete this chirp?"> 
+                                    {{ __('Delete') }}
+                                </x-dropdown-link> 
                             </x-slot>
                         </x-dropdown>
                     @endif

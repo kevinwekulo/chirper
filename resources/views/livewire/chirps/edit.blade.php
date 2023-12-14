@@ -8,10 +8,10 @@ new class extends Component
 {
     public Chirp $chirp;
     
-    #[Rules('required','string', 'max:255')]
-    public string message = '';
+    #[Rules('required|string|max:255')]
+    public string $message = '';
 
-    public function mount(Chirp $chirp): void
+    public function mount(): void
     {
         $this->message = $this->chirp->message;
     }
@@ -29,7 +29,7 @@ new class extends Component
 
     public function cancel() : void 
     {
-        $this->dispatch('chirp-editing-canceled')    
+        $this->dispatch('chirp-edit-canceled');  
     }
 
 }; ?>
